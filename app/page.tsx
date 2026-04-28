@@ -1,65 +1,92 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+
+const FONTS = [
+  "Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", 
+  "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS", 
+  "Trebuchet MS", "Arial Black", "Impact", "Tahoma", "Geneva", "Century Gothic", 
+  "Lucida Grande", "Optima", "Avant Garde", "Calibri", "Candara", "Cambria", 
+  "Consolas", "Perpetua", "Monaco", "Didot", "Brush Script MT", "Lucida Console", 
+  "Copperplate", "Papyrus", "Baskerville", "Franklin Gothic Medium", "Segoe UI", 
+  "Roboto", "Open Sans", "Lato", "Montserrat", "Source Sans Pro", "Raleway", 
+  "PT Sans", "Ubuntu", "Droid Sans", "Noto Sans", "Arial Narrow", "cursive", 
+  "fantasy", "monospace", "serif"
+];
 
 export default function Home() {
+  const [fontIndex, setFontIndex] = useState(0);
+  const [color, setColor] = useState("#333333");
+
+  const cycleFont = () => {
+    setFontIndex((prev) => (prev + 1) % FONTS.length);
+  };
+
+  const changeColor = () => {
+    // Generate slightly darker colors so they remain readable on a light background
+    const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    setColor(randomColor);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-center p-8 relative overflow-hidden">
+      {/* Background ambient light effects */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-300/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-300/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000" />
+      <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-300/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000" />
+
+      <div className="max-w-2xl text-center space-y-12 relative z-10">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-emerald-600 drop-shadow-sm">
+          Typography & Color Playground
+        </h1>
+        
+        <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border border-white/50 relative overflow-hidden group hover:shadow-indigo-500/10 transition-shadow duration-500">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <p 
+            className="text-2xl md:text-3xl leading-relaxed transition-all duration-300 relative z-10 drop-shadow-sm"
+            style={{ 
+              fontFamily: FONTS[fontIndex], 
+              color: color 
+            }}
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
           </p>
+          
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-slate-600 relative z-10 bg-slate-100/60 py-3 px-6 rounded-full inline-flex mx-auto border border-slate-200/80 backdrop-blur-sm shadow-sm">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-slate-700 uppercase tracking-wider text-xs">Font:</span> 
+              <span className="bg-white px-3 py-1 rounded-md font-mono border border-slate-200 shadow-sm">{FONTS[fontIndex]}</span>
+            </div>
+            <div className="hidden sm:block text-slate-400">•</div>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-slate-700 uppercase tracking-wider text-xs">Color:</span> 
+              <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-md border border-slate-200 shadow-sm">
+                <div className="w-3 h-3 rounded-full border border-slate-300 shadow-inner" style={{ backgroundColor: color }} />
+                <span className="font-mono">{color}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md mx-auto">
+          <button 
+            onClick={cycleFont}
+            className="group relative px-6 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 active:translate-y-0 flex-1 overflow-hidden"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-indigo-400/0 via-white/20 to-indigo-400/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <span className="relative">Cycle Font</span>
+          </button>
+          
+          <button 
+            onClick={changeColor}
+            className="group relative px-6 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 active:translate-y-0 flex-1 overflow-hidden"
           >
-            Documentation
-          </a>
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-400/0 via-white/20 to-emerald-400/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <span className="relative">Random Color</span>
+          </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
