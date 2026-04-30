@@ -87,15 +87,15 @@ export default function ItemsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-neutral-950 text-neutral-100 flex items-center justify-center p-4 selection:bg-emerald-500/30">
-            <div className="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-sm">
+        <div className="min-h-screen bg-neutral-50 text-neutral-900 flex items-center justify-center p-4 selection:bg-emerald-500/30">
+            <div className="w-full max-w-md bg-white border border-neutral-200 rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm">
 
                 {/* Header Section */}
-                <div className="p-8 border-b border-neutral-800 bg-gradient-to-b from-neutral-900 to-neutral-950">
-                    <h1 className="text-3xl font-extrabold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                <div className="p-8 border-b border-neutral-200 bg-gradient-to-b from-white to-neutral-50">
+                    <h1 className="text-3xl font-extrabold bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent mb-2">
                         Grocery List
                     </h1>
-                    <p className="text-neutral-400 text-sm">Keep track of your shopping needs.</p>
+                    <p className="text-neutral-500 text-sm">Keep track of your shopping needs.</p>
                 </div>
 
                 {/* Input Section */}
@@ -106,7 +106,7 @@ export default function ItemsPage() {
                             value={newItemName}
                             onChange={(e) => setNewItemName(e.target.value)}
                             placeholder="What do you need?"
-                            className="flex-1 bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all placeholder:text-neutral-600"
+                            className="flex-1 bg-white border border-neutral-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all placeholder:text-neutral-400 text-neutral-900 shadow-sm"
                         />
                         <button
                             type="submit"
@@ -140,8 +140,8 @@ export default function ItemsPage() {
                                 <li
                                     key={item.id}
                                     className={`group flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${item.is_completed
-                                            ? 'bg-neutral-900/50 border-neutral-800/50'
-                                            : 'bg-neutral-800/30 border-neutral-700/50 hover:bg-neutral-800 hover:border-neutral-700'
+                                            ? 'bg-neutral-50 border-neutral-200'
+                                            : 'bg-white border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 shadow-sm'
                                         }`}
                                 >
                                     <div className="flex items-center gap-4 flex-1 overflow-hidden">
@@ -149,17 +149,17 @@ export default function ItemsPage() {
                                             onClick={() => toggleComplete(item.id, item.is_completed)}
                                             className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${item.is_completed
                                                     ? 'bg-emerald-500 border-emerald-500'
-                                                    : 'border-neutral-500 hover:border-emerald-400'
+                                                    : 'border-neutral-300 bg-white hover:border-emerald-400'
                                                 }`}
                                         >
                                             {item.is_completed && (
-                                                <svg className="w-3.5 h-3.5 text-neutral-950" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                                 </svg>
                                             )}
                                         </button>
                                         <span
-                                            className={`truncate transition-all duration-300 ${item.is_completed ? 'text-neutral-500 line-through' : 'text-neutral-200'
+                                            className={`truncate transition-all duration-300 ${item.is_completed ? 'text-neutral-400 line-through' : 'text-neutral-700 font-medium'
                                                 }`}
                                         >
                                             {item.name}
@@ -168,7 +168,7 @@ export default function ItemsPage() {
 
                                     <button
                                         onClick={() => deleteItem(item.id)}
-                                        className="opacity-0 group-hover:opacity-100 p-2 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all focus:opacity-100"
+                                        className="opacity-0 group-hover:opacity-100 p-2 text-neutral-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all focus:opacity-100"
                                         aria-label="Delete item"
                                     >
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -192,7 +192,7 @@ export default function ItemsPage() {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #3f3f46;
+          background-color: #d4d4d8;
           border-radius: 20px;
         }
       `}} />
