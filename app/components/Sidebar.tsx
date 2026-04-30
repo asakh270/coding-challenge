@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Menu, X } from "lucide-react";
+import { Home, Sparkles, Menu, X, List } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "Fun", href: "/fun", icon: Sparkles },
+  { name: "Items", href: "/items", icon: List },
 ];
 
 export default function Sidebar() {
@@ -34,9 +35,8 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 z-40 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 z-40 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="flex flex-col h-full p-6">
           <div className="flex items-center gap-3 mb-10 px-2">
@@ -57,17 +57,15 @@ export default function Sidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                    isActive
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
                       ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-medium"
                       : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100"
-                  }`}
+                    }`}
                 >
                   <Icon
                     size={20}
-                    className={`transition-transform duration-200 group-hover:scale-110 ${
-                      isActive ? "text-indigo-600 dark:text-indigo-400" : ""
-                    }`}
+                    className={`transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-indigo-600 dark:text-indigo-400" : ""
+                      }`}
                   />
                   <span>{item.name}</span>
                   {isActive && (
