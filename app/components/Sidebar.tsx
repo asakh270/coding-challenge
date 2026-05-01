@@ -2,17 +2,34 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Menu, X } from "lucide-react";
-import { useState } from "react";
-
-const navItems = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Fun", href: "/fun", icon: Sparkles },
-];
+import { Home, Sparkles, Menu, X, List, LogIn, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [session, setSession] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const navItems = [
+    { name: "Home", href: "/", icon: Home },
+    { name: "Fun", href: "/fun", icon: Sparkles },
+    ...(session ? [{ name: "Items", href: "/items", icon: List }] : []),
+  ];
 
   return (
     <>
@@ -76,17 +93,41 @@ export default function Sidebar() {
           </nav>
 
           <div className="mt-auto pt-6 border-t border-zinc-100 dark:border-zinc-800">
-            <div className="flex items-center gap-3 px-2 py-2">
-              <div className="w-9 h-9 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center text-sm font-semibold">
-                MK
+            {session ? (
+              <div className="flex items-center justify-between px-2 py-2 group">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="w-9 h-9 flex-shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center text-sm font-semibold uppercase">
+                    {session.user.email?.charAt(0) || "U"}
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                      {session.user.email}
+                    </span>
+                    <span className="text-xs text-zinc-500">Logged in</span>
+                  </div>
+                </div>
+                <button
+                  onClick={async () => { await supabase.auth.signOut(); setIsOpen(false); }}
+                  className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut size={18} />
+                </button>
               </div>
-              <div className="flex flex-col">
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-2 py-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+              >
+                <div className="w-9 h-9 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <LogIn size={18} />
+                </div>
                 <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                  Mason Kalaty
+                  Login / Sign Up
                 </span>
-                <span className="text-xs text-zinc-500">Free Plan</span>
-              </div>
-            </div>
+              </Link>
+            )}
           </div>
         </div>
       </aside>
