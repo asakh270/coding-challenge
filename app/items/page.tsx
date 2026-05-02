@@ -99,11 +99,11 @@ export default function ItemsPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {people.map(person => (
-                            <GroceryColumn 
+                            <GroceryColumn
                                 key={person.id}
-                                person={person} 
-                                items={items.filter(i => i.person_id === person.id)} 
-                                setItems={setItems} 
+                                person={person}
+                                items={items.filter(i => i.person_id === person.id)}
+                                setItems={setItems}
                                 allItems={items}
                                 toggleComplete={toggleComplete}
                                 deleteItem={deleteItem}
@@ -131,14 +131,14 @@ export default function ItemsPage() {
     );
 }
 
-function GroceryColumn({ 
-    person, 
-    items, 
-    setItems, 
+function GroceryColumn({
+    person,
+    items,
+    setItems,
     allItems,
-    toggleComplete, 
+    toggleComplete,
     deleteItem
-}: { 
+}: {
     person: Person;
     items: Item[];
     setItems: any;
@@ -210,16 +210,16 @@ function GroceryColumn({
                             <li
                                 key={item.id}
                                 className={`group flex items-center justify-between p-3 rounded-xl border transition-all duration-300 ${item.is_completed
-                                        ? 'bg-neutral-50 border-neutral-200'
-                                        : 'bg-white border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 shadow-sm'
+                                    ? 'bg-neutral-50 border-neutral-200'
+                                    : 'bg-white border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 shadow-sm'
                                     }`}
                             >
                                 <div className="flex items-center gap-3 flex-1 overflow-hidden">
                                     <button
                                         onClick={() => toggleComplete(item.id, item.is_completed)}
                                         className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.is_completed
-                                                ? 'bg-emerald-500 border-emerald-500'
-                                                : 'border-neutral-300 bg-white hover:border-emerald-400'
+                                            ? 'bg-emerald-500 border-emerald-500'
+                                            : 'border-neutral-300 bg-white hover:border-emerald-400'
                                             }`}
                                     >
                                         {item.is_completed && (
