@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Menu, X, List, LogIn, LogOut, Users } from "lucide-react";
+import { Home, Sparkles, Menu, X, List, LogIn, LogOut, Users, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -30,7 +30,8 @@ export default function Sidebar() {
     { name: "Fun", href: "/fun", icon: Sparkles },
     ...(session ? [
       { name: "Items", href: "/items", icon: List },
-      { name: "Clients", href: "/clients", icon: Users }
+      { name: "Clients", href: "/clients", icon: Users },
+      { name: "Spaces", href: "/spaces", icon: MapPin }
     ] : []),
   ];
 
