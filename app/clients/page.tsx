@@ -4,9 +4,9 @@ import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 
 export default function ClientsPage() {
-    const [clients, setClients] = useState([]);
-    const [selectedClient, setSelectedClient] = useState(null);
-    const [spaces, setSpaces] = useState([]);
+    const [clients, setClients] = useState<any[]>([]);
+    const [selectedClient, setSelectedClient] = useState<any>(null);
+    const [spaces, setSpaces] = useState<any[]>([]);
 
     useEffect(() => {
         fetchClients();

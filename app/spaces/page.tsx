@@ -4,9 +4,9 @@ import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 
 export default function SpacesPage() {
-  const [spaces, setSpaces] = useState([]);
-  const [selectedSpace, setSelectedSpace] = useState(null);
-  const [clients, setClients] = useState([]);
+  const [spaces, setSpaces] = useState<any[]>([]);
+  const [selectedSpace, setSelectedSpace] = useState<any>(null);
+  const [clients, setClients] = useState<any[]>([]);
 
   useEffect(() => {
     fetchSpaces();
