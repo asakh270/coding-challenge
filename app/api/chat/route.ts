@@ -8,7 +8,15 @@ const genAI = new GoogleGenerativeAI(
 
 export async function POST(req: Request) {
     try {
-        const { message } = await req.json()
+        // 🔥 UPDATED: now we also receive userId
+        const { message, userId } = await req.json()
+
+        if (!userId) {
+            return NextResponse.json(
+                { error: "Missing userId" },
+                { status: 400 }
+            )
+        }
 
         // =========================
         // FETCH PEOPLE + ITEMS
@@ -68,6 +76,16 @@ ${message}
 `
 
         // =========================
+        // SAVE USER MESSAGE (NEW)
+        // =========================
+
+        await supabase.from("messages").insert({
+            user_id: userId,
+            role: "user",
+            content: message
+        })
+
+        // =========================
         // GEMINI
         // =========================
 
@@ -78,6 +96,16 @@ ${message}
         const result = await model.generateContent(prompt)
 
         const response = result.response.text()
+
+        // =========================
+        // SAVE AI RESPONSE (NEW)
+        // =========================
+
+        await supabase.from("messages").insert({
+            user_id: userId,
+            role: "ai",
+            content: response
+        })
 
         return NextResponse.json({
             reply: response

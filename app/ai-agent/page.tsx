@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { supabase } from "@/lib/supabase"
+
 
 type Message = {
     role: "user" | "ai"
@@ -11,11 +13,59 @@ export default function AIAgentPage() {
     const [message, setMessage] = useState("")
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
+    const [session, setSession] = useState<any>(null)
+
+    // ================================
+    // ✅ UPDATED: Load Supabase session
+    // ================================
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session)
+        })
+    }, [])
+
+    // ================================
+    // 🆕 NEW: Load chat history on open
+    // ================================
+    useEffect(() => {
+        if (!session?.user?.id) return
+
+        loadMessages()
+    }, [session])
+
+    // ================================
+    // 🆕 NEW: Fetch messages from DB
+    // ================================
+    const loadMessages = async () => {
+        const { data } = await supabase
+            .from("messages")
+            .select("*")
+            .eq("user_id", session.user.id)
+            .order("created_at", { ascending: true })
+
+        if (data) {
+            // 🔥 UPDATED: map DB format → UI format
+            setMessages(
+                data.map((msg: any) => ({
+                    role: msg.role,
+                    content: msg.content
+                }))
+            )
+        }
+    }
 
     const handleSubmit = async () => {
         if (!message.trim()) return
 
-        // Save user message
+        // ================================
+        // 🔥 UPDATED: safer session check
+        // ================================
+        if (!session?.user?.id) {
+            alert("Please login to continue")
+            return
+        }
+
+        // Save user message locally (instant UI update)
         const userMessage: Message = {
             role: "user",
             content: message
@@ -32,13 +82,13 @@ export default function AIAgentPage() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    message
+                    message,
+                    userId: session.user.id // 🔥 UPDATED: ensured safe access
                 })
             })
 
             const data = await res.json()
 
-            // Save AI response
             const aiMessage: Message = {
                 role: "ai",
                 content: data.reply
