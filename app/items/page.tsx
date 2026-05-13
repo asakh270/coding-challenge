@@ -14,6 +14,7 @@ type Item = {
     created_at: string;
     is_completed: boolean;
     person_id: string;
+    image_url: string | null;
 };
 
 export default function ItemsPage() {
@@ -147,20 +148,65 @@ function GroceryColumn({
     deleteItem: (id: string) => void;
 }) {
     const [newItemName, setNewItemName] = useState('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     async function addItem(e: React.FormEvent) {
         e.preventDefault();
+
         if (!newItemName.trim()) return;
 
         try {
+            let imageUrl: string | null = null;
+
+            // =========================
+            // UPLOAD IMAGE IF EXISTS
+            // =========================
+
+            if (imageFile) {
+                const fileExt = imageFile.name.split('.').pop();
+
+                const fileName = `${Date.now()}.${fileExt}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('grocery-images')
+                    .upload(fileName, imageFile);
+
+                if (uploadError) throw uploadError;
+
+                // Get public URL
+                const { data: publicUrlData } = supabase.storage
+                    .from('grocery-images')
+                    .getPublicUrl(fileName);
+
+                imageUrl = publicUrlData.publicUrl;
+            }
+
+            // =========================
+            // INSERT ITEM
+            // =========================
+
             const { data, error } = await supabase
                 .from('items')
-                .insert([{ name: newItemName.trim(), is_completed: false, person_id: person.id }])
+                .insert([
+                    {
+                        name: newItemName.trim(),
+                        is_completed: false,
+                        person_id: person.id,
+                        image_url: imageUrl
+                    }
+                ])
                 .select();
 
             if (error) throw error;
-            if (data) setItems([data[0], ...allItems]);
+
+            if (data) {
+                setItems([data[0], ...allItems]);
+            }
+
+            // Reset form
             setNewItemName('');
+            setImageFile(null);
+
         } catch (error) {
             console.error('Error adding item:', error);
         }
@@ -177,7 +223,7 @@ function GroceryColumn({
 
             {/* Input Section */}
             <div className="p-5 pb-2">
-                <form onSubmit={addItem} className="flex gap-2">
+                <form onSubmit={addItem} className="flex flex-col gap-3">
                     <input
                         type="text"
                         value={newItemName}
@@ -185,6 +231,37 @@ function GroceryColumn({
                         placeholder="Add item..."
                         className="flex-1 bg-white border border-neutral-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all placeholder:text-neutral-400 text-neutral-900 shadow-sm text-sm"
                     />
+                    <div className="flex items-center gap-3 flex-wrap">
+
+                        {/* Hidden REAL file input */}
+                        <input
+                            id={`file-upload-${person.id}`}
+                            type="file"
+                            accept=".png,.jpg,.jpeg,.webp"
+                            onChange={(e) => {
+                                if (e.target.files?.[0]) {
+                                    setImageFile(e.target.files[0]);
+                                }
+                            }}
+                            className="hidden"
+                        />
+
+                        {/* Fake styled button */}
+                        <label
+                            htmlFor={`file-upload-${person.id}`}
+                            className="cursor-pointer bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors shadow-sm"
+                        >
+                            Choose File
+                        </label>
+
+                        {/* File name */}
+                        <span className="text-sm text-neutral-500">
+                            {imageFile
+                                ? imageFile.name
+                                : "No file chosen (PNG, JPG, JPEG, WEBP)"}
+                        </span>
+
+                    </div>
                     <button
                         type="submit"
                         disabled={!newItemName.trim()}
@@ -228,6 +305,13 @@ function GroceryColumn({
                                             </svg>
                                         )}
                                     </button>
+                                    {item.image_url && (
+                                        <img
+                                            src={item.image_url}
+                                            alt={item.name}
+                                            className="w-12 h-12 object-cover rounded-lg border border-neutral-200"
+                                        />
+                                    )}
                                     <span
                                         className={`truncate text-sm transition-all duration-300 ${item.is_completed ? 'text-neutral-400 line-through' : 'text-neutral-700 font-medium'
                                             }`}
