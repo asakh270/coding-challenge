@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Menu, X, List, LogIn, LogOut, Users, MapPin, Moon, Bot } from "lucide-react";
+import { Home, Sparkles, Menu, X, List, LogIn, LogOut, Users, MapPin, Moon, Bot, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -33,7 +33,8 @@ export default function Sidebar() {
       { name: "Clients", href: "/clients", icon: Users },
       { name: "Spaces", href: "/spaces", icon: MapPin },
       { name: "Shabbat Times", href: "/shabbat-times", icon: Moon },
-      { name: "AI Agent", href: "/ai-agent", icon: Bot }
+      { name: "AI Agent", href: "/ai-agent", icon: Bot },
+      { name: "Chats", href: "/chats", icon: MessageSquare }
     ] : []),
   ];
 
